@@ -1,26 +1,54 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light Theme */
+  --color-light-bg-primary: #f0f8ff; /* Very light blue */
+  --color-light-bg-secondary: #e6f0ff; /* Light blue */
+  --color-light-bg-accent: #d9e8ff; /* Medium light blue */
+  --color-light-text-primary: #1e293b; /* slate-800 */
+  --color-light-text-accent: #1d4ed8; /* blue-700 */
+  --color-light-text-highlight: #7e22ce; /* purple-600 */
+  --color-light-button-primary-from: #2563eb; /* blue-600 */
+  --color-light-button-primary-to: #9333ea; /* purple-600 */
+  --color-light-button-secondary-bg: rgba(230, 240, 255, 0.8); /* Light blue with transparency */
+  --color-light-border-primary: rgba(147, 197, 253, 0.5); /* blue-300/50 */
+
+  /* Dark Theme */
+  --color-dark-bg-primary: #000000; /* Black */
+  --color-dark-bg-secondary: #0a0a1a; /* Dark blue-black */
+  --color-dark-bg-accent: #12122a; /* Slightly lighter dark blue */
+  --color-dark-text-primary: #e2e8f0; /* slate-200 */
+  --color-dark-text-accent: #93c5fd; /* blue-300 */
+  --color-dark-text-highlight: #d8b4fe; /* purple-300 */
+  --color-dark-button-primary-from: #1d4ed8; /* blue-700 */
+  --color-dark-button-primary-to: #7e22ce; /* purple-700 */
+  --color-dark-button-secondary-bg: rgba(10, 10, 26, 0.8); /* Dark blue-black with transparency */
+  --color-dark-border-primary: #1e293b; /* slate-800 */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Apply the variables to utility classes */
+.light-theme {
+  --color-bg-primary: var(--color-light-bg-primary);
+  --color-bg-secondary: var(--color-light-bg-secondary);
+  --color-bg-accent: var(--color-light-bg-accent);
+  --color-text-primary: var(--color-light-text-primary);
+  --color-text-accent: var(--color-light-text-accent);
+  --color-text-highlight: var(--color-light-text-highlight);
+  --color-button-primary-from: var(--color-light-button-primary-from);
+  --color-button-primary-to: var(--color-light-button-primary-to);
+  --color-button-secondary-bg: var(--color-light-button-secondary-bg);
+  --color-border-primary: var(--color-light-border-primary);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.dark-theme {
+  --color-bg-primary: var(--color-dark-bg-primary);
+  --color-bg-secondary: var(--color-dark-bg-secondary);
+  --color-bg-accent: var(--color-dark-bg-accent);
+  --color-text-primary: var(--color-dark-text-primary);
+  --color-text-accent: var(--color-dark-text-accent);
+  --color-text-highlight: var(--color-dark-text-highlight);
+  --color-button-primary-from: var(--color-dark-button-primary-from);
+  --color-button-primary-to: var(--color-dark-button-primary-to);
+  --color-button-secondary-bg: var(--color-dark-button-secondary-bg);
+  --color-border-primary: var(--color-dark-border-primary);
 }
