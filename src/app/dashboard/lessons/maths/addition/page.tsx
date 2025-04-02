@@ -1,6 +1,6 @@
 "use client";
 import { useTheme } from "@/context/ThemeContext";
-import React, { useState } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import { FaCalculator, FaLightbulb, FaExchangeAlt } from "react-icons/fa";
 import {MathInputContainer} from "@/component/MathInputContanier";
 
@@ -9,18 +9,30 @@ type MathAdditionTableProps = {
     num2: number;
     showBlocks: boolean;
   };
-  
+  //Place Tables
   function MathAdditionTable({ num1, num2, showBlocks }: MathAdditionTableProps) {
-    const placeValues = ['Thousands', 'Hundreds', 'Tens', 'Ones'];
+    const allPlaceValues = ['Ten-Thousands', 'Thousands', 'Hundreds', 'Tens', 'Ones'];
     
+    // Determine which place values we actually need to show
+    const getRelevantPlaces = (n1: number, n2: number) => {
+      const maxNum = n1+n2;
+      const places = [];
+      
+      if (maxNum >= 10000) places.push('Ten-Thousands');
+      if (maxNum >= 1000) places.push('Thousands');
+      if (maxNum >= 100) places.push('Hundreds');
+      if (maxNum >= 10) places.push('Tens');
+      places.push('Ones'); // Always show ones
+      
+      return places;
+    };
+  
+    const placeValues = getRelevantPlaces(num1, num2);
+    const placeMultipliers = placeValues.map((_, i) => Math.pow(10, placeValues.length - i - 1));
+  
     // Function to split number into digits with place values
     const getDigits = (num: number): number[] => {
-      const digits = [];
-      for (let i = placeValues.length - 1; i >= 0; i--) {
-        const place = Math.pow(10, i);
-        digits.unshift(Math.floor((num % (place * 10)) / place));
-      }
-      return digits.reverse();
+      return placeMultipliers.map(multiplier => Math.floor((num / multiplier) % 10));
     };
   
     const digits1 = getDigits(num1);
@@ -28,23 +40,21 @@ type MathAdditionTableProps = {
     const sum = num1 + num2;
     const sumDigits = getDigits(sum);
   
-    // Calculate carries correctly
     const calculateCarries = () => {
-      const carries = new Array(placeValues.length).fill(0);
-      let carry = 0;
-      
-      for (let i = placeValues.length - 1; i >= 0; i--) {
-        const digitSum = digits1[i] + digits2[i] + carry;
-        const newCarry = Math.floor(digitSum / 10);
-        if (i > 0) {
-          carries[i - 1] = newCarry;
+        const carries = new Array(placeValues.length).fill(0);
+        let carry = 0;
+        
+        for (let i = placeValues.length - 1; i >= 0; i--) {
+          const digitSum = digits1[i] + digits2[i] + carry;
+          const newCarry = Math.floor(digitSum / 10);
+          if (i > 0) {
+            carries[i - 1] = newCarry;
+          }
+          carry = newCarry;
         }
-        carry = newCarry;
-      }
-      
-      return carries;
-    };
-  
+        
+        return carries;
+      };
     const carries = calculateCarries();
   
     // Render digit as number or blocks with improved styling
@@ -64,16 +74,41 @@ type MathAdditionTableProps = {
       return <span className="text-lg font-semibold">{value}</span>;
     };
   
+    // Render carry indicator (shows in both modes)
+    const renderCarry = (carry: number, index: number) => {
+      if (carry <= 0) return null;
+      
+      if (showBlocks) {
+        return (
+          <div className="flex justify-center flex-wrap gap-1 max-w-[70px] p-1 absolute -top-4 left-1/2 transform -translate-x-1/2">
+            {[...Array(carry)].map((_, i) => (
+              <div 
+                key={i}
+                className="w-2 h-2 bg-yellow-500 rounded-sm shadow-sm"
+              ></div>
+            ))}
+          </div>
+        );
+      } else {
+        return (
+          <div className="absolute -top-3 right-1/2 transform translate-x-1/2 
+                         text-xs font-bold text-blue-600 bg-blue-100 px-1 rounded">
+            {carry}
+          </div>
+        );
+      }
+    };
+  
     return (
       <div className="w-full overflow-x-auto">
-        <table className="border-collapse w-full" style={{ minWidth: '600px' }}>
+        <table className="border-collapse w-full" style={{ minWidth: `${placeValues.length * 100}px` }}>
           <thead>
             <tr className="border-b-2 border-[var(--color-border-primary)]">
-              <th className="p-3 text-left w-[100px]">Carry</th>
+              <th className="p-3 text-left w-[100px]"></th>
               {placeValues.map((place, index) => (
                 <th 
                   key={index} 
-                  className="p-3 text-center font-medium bg-[var(--color-bg-accent)]"
+                  className="p-3 text-center font-medium bg-[var(--color-bg-accent)] relative"
                   style={{ width: '120px' }}
                 >
                   {place}
@@ -83,17 +118,17 @@ type MathAdditionTableProps = {
             </tr>
           </thead>
           <tbody>
-            {/* Carry row */}
+            {/* Carry row - now visible in both modes */}
             <tr className="border-b border-[var(--color-border-primary)]">
-              <td className="p-3 text-center text-lg font-medium">→</td>
+              <td className="p-3 text-sm text-gray-500">Carry →</td>
               {carries.map((carry, index) => (
                 <td 
                   key={index} 
-                  className="p-3 text-center bg-[var(--color-bg-accent)]"
+                  className="p-3 text-center relative"
+                  style={{ backgroundColor: 'var(--color-bg-accent)' }}
                 >
-                  {index < placeValues.length - 1 ? (
-                    renderDigit(carry, 'bg-red-500')
-                  ) : ''}
+                  {renderDigit(carry, "bg-yellow-500")}
+                  
                 </td>
               ))}
               <td></td>
@@ -105,7 +140,7 @@ type MathAdditionTableProps = {
               {digits1.map((digit, index) => (
                 <td 
                   key={index} 
-                  className="p-3 text-center"
+                  className="p-3 text-center relative"
                   style={{ backgroundColor: 'var(--color-bg-secondary)' }}
                 >
                   {renderDigit(digit, 'bg-blue-500')}
@@ -116,7 +151,7 @@ type MathAdditionTableProps = {
             
             {/* Second number row */}
             <tr className="border-b border-[var(--color-border-primary)]">
-              <td className="p-3"></td>
+              <td className="p-3 text-xl font-bold">+</td>
               {digits2.map((digit, index) => (
                 <td 
                   key={index} 
@@ -131,11 +166,11 @@ type MathAdditionTableProps = {
             
             {/* Sum row */}
             <tr>
-              <td className="p-3"></td>
+              <td className="p-3 text-xl font-bold">=</td>
               {sumDigits.map((digit, index) => (
                 <td 
                   key={index} 
-                  className="p-3 text-center font-semibold"
+                  className="p-3 text-center font-semibold relative"
                   style={{ 
                     backgroundColor: 'var(--color-bg-secondary)',
                     color: 'var(--color-text-accent)'
@@ -153,6 +188,190 @@ type MathAdditionTableProps = {
       </div>
     );
   }
+
+  const NumberLineAnimation = ({ num1 = 8, num2 = 3 }) => {
+    const [currentStep, setCurrentStep] = useState<number>(0);
+    const [isAnimating, setIsAnimating] = useState<boolean>(false);
+    const animationRef = useRef<NodeJS.Timeout | null>(null);
+    const result = num1 + num2;
+    
+    const steps = [
+      { 
+        description: `Start at ${num1}`, 
+        position: num1, 
+        highlightStart: true, 
+        highlightDistance: false, 
+        showLine: false,
+        delay: 1000
+      },
+      { 
+        description: `Adding ${num2} to ${num1}`, 
+        position: num1 + 1, 
+        highlightStart: true, 
+        highlightDistance: true, 
+        showLine: true,
+        delay: 1000
+      },
+      ...(num2 > 1 ? Array.from({ length: num2 - 1 }, (_, i) => ({
+        description: i === num2 - 2 ? 
+          `Add final 1 (${num1 + i + 1} + 1 = ${result})` : 
+          `Add 1 more (${num1 + i + 1} + 1 = ${num1 + i + 2})`,
+        position: num1 + i + 2,
+        highlightStart: true,
+        highlightDistance: true,
+        showLine: true,
+        delay: 1000
+      })) : []),
+      { 
+        description: `Final result: ${num1} + ${num2} = ${result}`, 
+        position: result, 
+        highlightStart: false, 
+        highlightDistance: false, 
+        showLine: true, // Keep the line visible at the end
+        showResult: true,
+        delay: 1500 // Longer delay for final result
+      }
+    ];
+  
+    useEffect(() => {
+      if (isAnimating) {
+        let currentIndex = 0;
+        
+        const playStep = (index: number) => {
+          if (index >= steps.length) {
+            setIsAnimating(false);
+            return;
+          }
+          
+          setCurrentStep(index);
+          currentIndex = index;
+          
+          animationRef.current = setTimeout(() => {
+            playStep(index + 1);
+          }, steps[index].delay || 1000);
+        };
+        
+        playStep(0);
+      }
+  
+      return () => {
+        if (animationRef.current) {
+          clearTimeout(animationRef.current);
+        }
+      };
+    }, [isAnimating]);
+  
+    const resetAnimation = () => {
+      if (animationRef.current) {
+        clearTimeout(animationRef.current);
+      }
+      setCurrentStep(0);
+      setIsAnimating(true);
+    };
+  
+    return (
+      <div className="w-full relative mt-8 mb-12">
+        {/* Number line with ticks and labels */}
+        <div className="relative h-40">
+          {/* Main line */}
+          <div className="absolute left-0 right-0 h-1 bg-gray-300 top-1/2 transform -translate-y-1/2"></div>
+          
+          {/* Ticks and numbers */}
+          {[...Array(result + 2).keys()].map((n) => (
+            <div key={n} className="absolute bottom-1/2 transform translate-y-1/2" 
+              style={{ left: `${(n * 100) / (result + 1)}%` }}>
+              <div className={`h-4 w-0.5 ${n <= steps[currentStep].position ? 'bg-blue-500' : 'bg-gray-500'} mx-auto`}></div>
+              <div className={`text-sm mt-1 ${n <= steps[currentStep].position ? 'text-blue-600 font-bold' : 'text-gray-500'}`}>
+                {n}
+              </div>
+            </div>
+          ))}
+          
+          {/* Starting number marker */}
+          <div 
+            className={`absolute h-10 w-10 rounded-full bottom-1/2 transition-all duration-300 flex items-center justify-center
+              ${steps[currentStep].highlightStart ? 'bg-red-500 ring-4 ring-red-200' : 'bg-red-300'}`}
+            style={{ 
+              left: `${(num1 * 100) / (result + 1)}%`,
+              transform: 'translate(-50%, 50%)',
+              zIndex: 10
+            }}
+          >
+            <span className="text-white font-bold">{num1}</span>
+          </div>
+          
+          {/* Moving number marker */}
+          <div 
+            className={`absolute h-10 w-10 rounded-full bottom-1/2 transition-all duration-700 flex items-center justify-center
+              ${steps[currentStep].highlightDistance ? 'bg-green-500 ring-4 ring-green-200' : 'bg-green-300'}`}
+            style={{ 
+              left: `${(steps[currentStep].position * 100) / (result + 1)}%`,
+              transform: 'translate(-50%, 50%)',
+              zIndex: 10
+            }}
+          >
+            <span className="text-white font-bold">
+              {steps[currentStep].position === num1 ? '' : `+${steps[currentStep].position - num1}`}
+            </span>
+          </div>
+          
+          {/* Distance line (now stays visible at the end) */}
+          {(steps[currentStep].showLine || currentStep === steps.length - 1) && (
+            <div 
+              className="absolute h-2 bg-purple-500 bottom-1/2 transform translate-y-1/2 transition-all duration-700 rounded-full"
+              style={{
+                left: `${(num1 * 100) / (result + 1)}%`,
+                width: `${((steps[currentStep].position - num1) * 100) / (result + 1)}%`,
+                zIndex: 5
+              }}
+            />
+          )}
+          
+          {/* Distance label */}
+          {(steps[currentStep].showLine || currentStep === steps.length - 1) && isAnimating&& (
+            <div 
+              className="absolute bg-purple-100 text-purple-800 px-2 py-1 rounded-md text-sm font-bold bottom-1/2 transition-all duration-700"
+              style={{
+                left: `${( (steps[currentStep].position)  * 100 / (result + 1))}%`,
+                transform: 'translate(-50%, -150%)',
+                zIndex: 15
+              }}
+            >
+              {steps[currentStep].position}
+            </div>
+          )}
+          
+          {/* Final result */}
+          {steps[currentStep].showResult && (
+            <div 
+              className="absolute h-14 w-14 bg-blue-600 rounded-full bottom-1/2 flex items-center justify-center animate-bounce"
+              style={{ 
+                left: `${(result * 100) / (result + 1)}%`,
+                transform: 'translate(-50%, 50%)',
+                zIndex: 20
+              }}
+            >
+              <span className="text-white font-bold text-lg">{result}</span>
+            </div>
+          )}
+        </div>
+        
+        {/* Controls */}
+        <div className="text-center mt-8">
+          <button 
+            onClick={resetAnimation}
+            className="px-6 py-2 bg-blue-600 text-white rounded-md text-lg font-medium hover:bg-blue-700 transition-colors shadow-md"
+          >
+            {currentStep === steps.length - 1 ? 'Replay Animation' : 'Start Animation'}
+          </button>
+          
+          <div className="mt-4 p-3 bg-gray-100 rounded-lg text-gray-800 font-medium">
+            {steps[currentStep].description}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
 export default function Additions() {
     const [num1, setNum1] = useState("845");
@@ -183,58 +402,14 @@ export default function Additions() {
     switch (visualizationType) {
       case "number-line":
         if (!isSingleDigit(num1) || !isSingleDigit(num2)) {
-          return (
-            <div className="text-center p-4 text-red-500">
-              Number line visualization only works with single-digit numbers (0-9)
-            </div>
-          );
-        }
-        return (
-          <div className="w-full h-16 relative mt-6">
-            <div className="absolute left-0 right-0 h-1 bg-[var(--color-border-primary)] top-1/2 transform -translate-y-1/2"></div>
-            {[...Array(result + 2).keys()].map((n) => (
-              <div 
-                key={n}
-                className="absolute h-4 w-0.5 bg-[var(--color-text-primary)] bottom-1/2"
-                style={{ left: `${(n * 100) / (result + 1)}%` }}
-              ></div>
-            ))}
-            <div 
-              className="absolute h-8 w-2 bg-[var(--color-button-primary-from)] bottom-1/2 transition-all duration-500"
-              style={{ left: "0%" }}
-              id="num1-marker"
-            ></div>
-            <div 
-              className="absolute h-8 w-2 bg-[var(--color-button-primary-to)] bottom-1/2 transition-all duration-500 delay-300"
-              style={{ left: `${(n1 * 100) / (result + 1)}%` }}
-              id="num2-marker"
-            ></div>
-          </div>
-        );
-      case "blocks":
-        if (!isSingleDigit(num1) || !isSingleDigit(num2)) {
-          return (
-            <div className="text-center p-4 text-red-500">
-              Block visualization only works with single-digit numbers (0-9)
-            </div>
-          );
-        }
-        return (
-          <div className="flex flex-wrap justify-center gap-2 mt-6">
-            {[...Array(n1).keys()].map((n) => (
-              <div 
-                key={`num1-${n}`} 
-                className="w-8 h-8 bg-[var(--color-button-primary-from)] rounded"
-              ></div>
-            ))}
-            {[...Array(n2).keys()].map((n) => (
-              <div 
-                key={`num2-${n}`} 
-                className="w-8 h-8 bg-[var(--color-button-primary-to)] rounded"
-              ></div>
-            ))}
-          </div>
-        );
+            return (
+              <div className="text-center p-4 text-red-500">
+                Number line visualization only works with single-digit numbers (0-9)
+              </div>
+            );
+          }
+          
+          return (<NumberLineAnimation num1={n1} num2={n2}/>)
       case "place-value":
         return (
             <div className="mt-6">
@@ -312,7 +487,6 @@ export default function Additions() {
             }}
           >
             {visualizationType === "number-line" && "The number line shows the first number, then adds the second number."}
-            {visualizationType === "blocks" && "Each block represents 1 unit. Combine them to see the total."}
             {visualizationType === "place-value" && "See how numbers are made of hundreds, tens, and ones."}
           </div>
         )}
@@ -327,16 +501,6 @@ export default function Additions() {
             }}
           >
             Number Line
-          </button>
-          <button
-            onClick={() => setVisualizationType("blocks")}
-            className={`px-3 py-1 rounded-md text-sm ${visualizationType === "blocks" ? 'opacity-100' : 'opacity-60'}`}
-            style={{
-              backgroundColor: visualizationType === "blocks" ? 'var(--color-button-primary-from)' : 'var(--color-bg-accent)',
-              color: visualizationType === "blocks" ? 'white' : 'var(--color-text-primary)'
-            }}
-          >
-            Counting Blocks
           </button>
           <button
             onClick={() => setVisualizationType("place-value")}
