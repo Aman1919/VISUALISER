@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useTheme } from "@/context/ThemeContext";
 import { FaSearch, FaBook,  } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { lessons } from "@/context/lessons";
 
 export default function Dashboard() {
-  const { darkMode } = useTheme();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
 
@@ -25,12 +23,8 @@ export default function Dashboard() {
   );
 
   return (
-    <div className={`min-h-screen p-6 ${darkMode ? 'dark-theme' : 'light-theme'} transition-colors`}
-      style={{
-        backgroundColor: 'var(--color-bg-primary)',
-        color: 'var(--color-text-primary)'
-      }}>
-      <div className="max-w-7xl mx-auto">
+    
+      <div className="max-w-7xl p-6 mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div className="flex items-center gap-3">
@@ -159,6 +153,5 @@ export default function Dashboard() {
           </div>
         )}
       </div>
-    </div>
   );
 }

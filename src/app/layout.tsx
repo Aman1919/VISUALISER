@@ -66,14 +66,26 @@ function BackButton() {
   );
 }
 
+function AllComponents({ children }: { children: React.ReactNode }){
+  const { darkMode } = useTheme();
+
+  return <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark-theme' : 'light-theme'}`}
+  style={{
+    backgroundColor: 'var(--color-bg-primary)',
+    color: 'var(--color-text-primary)'
+  }}>
+              <BackButton />
+          <DarkModeToggle />
+          {children}
+  </div>
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <ThemeProvider>
-        <body className="bg-white text-black dark:bg-black dark:text-white transition-colors">
-          <BackButton />
-          <DarkModeToggle />
-          {children}
+        <body >
+     <AllComponents children={children} />
         </body>
       </ThemeProvider>
     </html>
