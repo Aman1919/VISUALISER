@@ -4,18 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
-import { FaMoon, FaSun, FaRocket } from "react-icons/fa";
+import {FaRocket } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
 import "./globals.css";
 
 export default function Home() {
-  const { darkMode, toggleDarkMode } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
+  const { darkMode } = useTheme();
+  
   return (
     <div className={`relative flex min-h-screen flex-col items-center justify-center 
       ${darkMode ? 'dark-theme' : 'light-theme'} transition-all duration-500`}
@@ -27,26 +22,6 @@ export default function Home() {
           : 'linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 50%, var(--color-bg-accent) 100%)'
       }}
     >
-      {/* Dark Mode Toggle */}
-      {mounted && (
-        <button
-          onClick={toggleDarkMode}
-          className="absolute top-6 right-6 p-3 rounded-full"
-          style={{
-            backgroundColor: 'var(--color-button-secondary-bg)',
-            backdropFilter: 'blur(4px)',
-            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-            border: '1px solid var(--color-border-primary)'
-          }}
-          aria-label="Toggle dark mode"
-        >
-          {darkMode ? (
-            <FaSun className="text-yellow-300 text-xl" />
-          ) : (
-            <FaMoon style={{ color: 'var(--color-text-accent)' }} className="text-xl" />
-          )}
-        </button>
-      )}
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-16 flex flex-col items-center">
