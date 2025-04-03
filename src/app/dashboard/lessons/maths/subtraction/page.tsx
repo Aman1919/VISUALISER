@@ -1,5 +1,4 @@
 "use client";
-import { useTheme } from "@/context/ThemeContext";
 import React, { useState, useEffect, useRef } from "react";
 import { FaCalculator, FaLightbulb, FaExchangeAlt } from "react-icons/fa";
 import { MathInputContainer } from "@/component/MathInputContanier";
@@ -11,7 +10,6 @@ type MathSubtractionTableProps = {
 };
 
 function MathSubtractionTable({ num1, num2, showBlocks }: MathSubtractionTableProps) {
-  const allPlaceValues = ['Ten-Thousands', 'Thousands', 'Hundreds', 'Tens', 'Ones'];
   
   // Determine which place values we actually need to show
   const getRelevantPlaces = (n1: number, n2: number) => {
@@ -42,7 +40,7 @@ function MathSubtractionTable({ num1, num2, showBlocks }: MathSubtractionTablePr
 
   const calculateBorrows = () => {
     const borrows = new Array(placeValues.length).fill(0);
-    let tempDigits = [...digits1];
+    const  tempDigits = [...digits1];
     
     for (let i = placeValues.length - 1; i >= 0; i--) {
       if (tempDigits[i] < digits2[i]) {
@@ -87,7 +85,7 @@ function MathSubtractionTable({ num1, num2, showBlocks }: MathSubtractionTablePr
   };
 
   // Render borrow indicator (shows in both modes)
-  const renderBorrow = (borrow: number, index: number) => {
+  const renderBorrow = (borrow: number) => {
     if (borrow <= 0) return null;
     
     if (showBlocks) {
@@ -136,7 +134,7 @@ function MathSubtractionTable({ num1, num2, showBlocks }: MathSubtractionTablePr
                 style={{ backgroundColor: 'var(--color-bg-secondary)' }}
               >
                 {renderDigit(digit, 'bg-blue-500')}
-                {renderBorrow(borrows[index], index)}
+                {renderBorrow(borrows[index])}
               </td>
             ))}
             <td></td>
@@ -238,7 +236,7 @@ const NumberLineAnimation = ({ num1 = 8, num2 = 3 }) => {
         
         setCurrentStep(index);
         currentIndex = index;
-        
+        console.log(currentIndex)
         animationRef.current = setTimeout(() => {
           playStep(index + 1);
         }, steps[index].delay || 1000);
@@ -366,7 +364,6 @@ export default function Subtractions() {
   const [num1, setNum1] = useState("845");
   const [num2, setNum2] = useState("344");
   const [result, setResult] = useState<number | null>(501);
-  const { darkMode } = useTheme();
   const [visualizationType, setVisualizationType] = useState("place-value");
   const [showHint, setShowHint] = useState(false);
   const [showBlocks, setShowBlocks] = useState(false);

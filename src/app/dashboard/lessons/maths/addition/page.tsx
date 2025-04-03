@@ -1,5 +1,4 @@
 "use client";
-import { useTheme } from "@/context/ThemeContext";
 import React, { useState,useEffect,useRef } from "react";
 import { FaCalculator, FaLightbulb, FaExchangeAlt } from "react-icons/fa";
 import {MathInputContainer} from "@/component/MathInputContanier";
@@ -11,7 +10,6 @@ type MathAdditionTableProps = {
   };
   //Place Tables
   function MathAdditionTable({ num1, num2, showBlocks }: MathAdditionTableProps) {
-    const allPlaceValues = ['Ten-Thousands', 'Thousands', 'Hundreds', 'Tens', 'Ones'];
     
     // Determine which place values we actually need to show
     const getRelevantPlaces = (n1: number, n2: number) => {
@@ -74,30 +72,6 @@ type MathAdditionTableProps = {
       return <span className="text-lg font-semibold">{value}</span>;
     };
   
-    // Render carry indicator (shows in both modes)
-    const renderCarry = (carry: number, index: number) => {
-      if (carry <= 0) return null;
-      
-      if (showBlocks) {
-        return (
-          <div className="flex justify-center flex-wrap gap-1 max-w-[70px] p-1 absolute -top-4 left-1/2 transform -translate-x-1/2">
-            {[...Array(carry)].map((_, i) => (
-              <div 
-                key={i}
-                className="w-2 h-2 bg-yellow-500 rounded-sm shadow-sm"
-              ></div>
-            ))}
-          </div>
-        );
-      } else {
-        return (
-          <div className="absolute -top-3 right-1/2 transform translate-x-1/2 
-                         text-xs font-bold text-blue-600 bg-blue-100 px-1 rounded">
-            {carry}
-          </div>
-        );
-      }
-    };
   
     return (
       <div className="w-full overflow-x-auto">
@@ -245,7 +219,7 @@ type MathAdditionTableProps = {
           
           setCurrentStep(index);
           currentIndex = index;
-          
+        console.log(currentIndex)
           animationRef.current = setTimeout(() => {
             playStep(index + 1);
           }, steps[index].delay || 1000);
@@ -374,7 +348,6 @@ export default function Additions() {
     const [num1, setNum1] = useState("845");
     const [num2, setNum2] = useState("344");
     const [result, setResult] = useState<number | null>(1189);
-    const { darkMode } = useTheme();
     const [visualizationType, setVisualizationType] = useState("place-value");
     const [showHint, setShowHint] = useState(false);
     const [showBlocks, setShowBlocks] = useState(false);
@@ -515,7 +488,7 @@ export default function Additions() {
           {result !== null ? (
             renderVisualization()
           ) : (
-            <p className="text-center opacity-60">Enter numbers and click "Calculate"</p>
+            <p className="text-center opacity-60">Enter numbers and click {"Calculate"}</p>
           )}
         </div>
       </div>
