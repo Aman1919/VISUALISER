@@ -365,9 +365,6 @@ type MathAdditionTableProps = {
             {currentStep === steps.length - 1 ? 'Replay Animation' : 'Start Animation'}
           </button>
           
-          <div className="mt-4 p-3 bg-gray-100 rounded-lg text-gray-800 font-medium">
-            {steps[currentStep].description}
-          </div>
         </div>
       </div>
     );

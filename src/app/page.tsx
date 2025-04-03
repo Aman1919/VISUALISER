@@ -1,7 +1,4 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTheme } from "@/context/ThemeContext";
 import {FaRocket } from "react-icons/fa";
@@ -67,7 +64,7 @@ export default function Home() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          <Link href="/dashboard">
+          <a href="/dashboard">
             <button className="px-8 py-4 text-lg font-semibold flex items-center text-white rounded-xl group"
               style={{
                 backgroundImage: `linear-gradient(to right, var(--color-button-primary-from), var(--color-button-primary-to))`,
@@ -76,8 +73,8 @@ export default function Home() {
               Get Started
               <FiArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </button>
-          </Link>
-          <Link href="/lessons">
+          </a>
+          <a href="/lessons">
             <button className="px-8 py-4 text-lg font-semibold flex items-center rounded-xl"
               style={{
                 backgroundColor: 'var(--color-button-secondary-bg)',
@@ -87,7 +84,7 @@ export default function Home() {
               }}>
               Explore Lessons
             </button>
-          </Link>
+          </a>
         </motion.div>
 
         {/* Feature Section */}
