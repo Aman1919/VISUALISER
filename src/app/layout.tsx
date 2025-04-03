@@ -66,7 +66,7 @@ function BackButton() {
   );
 }
 
-function AllComponents({ children }: { children: React.ReactNode }){
+function ComponentsWapper({ children }: { children: React.ReactNode }){
   const { darkMode } = useTheme();
 
   return <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark-theme' : 'light-theme'}`}
@@ -85,7 +85,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <ThemeProvider>
         <body >
-     <AllComponents children={children} />
+     <ComponentsWapper >
+      {children}
+      </ComponentsWapper>
         </body>
       </ThemeProvider>
     </html>
