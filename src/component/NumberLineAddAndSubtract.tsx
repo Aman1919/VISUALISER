@@ -108,7 +108,7 @@ export  const NumberLineAnimation = ({
           
           setCurrentStep(index);
           currentIndex = index;
-          
+          console.log(currentIndex);
           animationRef.current = setTimeout(() => {
             playStep(index + 1);
           }, steps[index].delay || 1000);
