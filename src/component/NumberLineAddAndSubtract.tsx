@@ -141,7 +141,7 @@ export  const NumberLineAnimation = ({
       <div className="w-full relative mt-8 mb-12">
         {/* Operation description */}
         <div className="text-center mb-4 text-lg font-semibold">
-          {steps[currentStep].description}
+          {steps[currentStep].description || ""}
         </div>
   
         {/* Number line with ticks and labels */}
