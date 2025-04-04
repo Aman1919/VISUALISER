@@ -20,7 +20,10 @@ export function MathInputContainer({
     switch (operator) {
       case '+': return num1 + num2;
       case '-': return num1 - num2;
-      // Add more operations as needed
+      case 'x': return num1 * num2;
+      case '/': return num2 !== 0 ? num1 / num2 : 'Error: Division by zero';
+      case '%': return num1 % num2;
+      case '^': return Math.pow(num1, num2);
       default: return num1 + num2; // Default to addition
     }
   };
