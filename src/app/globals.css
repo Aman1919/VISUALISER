@@ -2,31 +2,31 @@
 
 :root {
   /* Light Theme */
-  --color-light-bg-primary: #f0f8ff; /* Very light blue */
-  --color-light-bg-secondary: #e6f0ff; /* Light blue */
-  --color-light-bg-accent: #d9e8ff; /* Medium light blue */
+  --color-light-bg-primary: #fdfdfd; /* Slightly warm white */
+  --color-light-bg-secondary: #eaf2ff; /* Softer light blue */
+  --color-light-bg-accent: #cfe2ff; /* Lighter sky blue */
   --color-light-text-primary: #1e293b; /* slate-800 */
-  --color-light-text-accent: #1d4ed8; /* blue-700 */
-  --color-light-text-highlight: #7e22ce; /* purple-600 */
-  --color-light-button-primary-from: #2563eb; /* blue-600 */
-  --color-light-button-primary-to: #9333ea; /* purple-600 */
-  --color-light-button-secondary-bg: rgba(230, 240, 255, 0.8); /* Light blue with transparency */
-  --color-light-border-primary: rgba(147, 197, 253, 0.5); /* blue-300/50 */
+  --color-light-text-accent: #2563eb; /* Blue-600 */
+  --color-light-text-highlight: #9333ea; /* Purple-600 */
+  --color-light-button-primary-from: #2563eb; /* Blue-600 */
+  --color-light-button-primary-to: #9333ea; /* Purple-600 */
+  --color-light-button-secondary-bg: rgba(230, 240, 255, 0.6); /* Light blue with more transparency */
+  --color-light-border-primary: rgba(147, 197, 253, 0.5); /* Blue-300/50 */
 
   /* Dark Theme */
-  --color-dark-bg-primary: #000000; /* Black */
-  --color-dark-bg-secondary: #0a0a1a; /* Dark blue-black */
-  --color-dark-bg-accent: #12122a; /* Slightly lighter dark blue */
-  --color-dark-text-primary: #e2e8f0; /* slate-200 */
-  --color-dark-text-accent: #93c5fd; /* blue-300 */
-  --color-dark-text-highlight: #d8b4fe; /* purple-300 */
-  --color-dark-button-primary-from: #1d4ed8; /* blue-700 */
-  --color-dark-button-primary-to: #7e22ce; /* purple-700 */
-  --color-dark-button-secondary-bg: rgba(10, 10, 26, 0.8); /* Dark blue-black with transparency */
-  --color-dark-border-primary: #1e293b; /* slate-800 */
+  --color-dark-bg-primary: #090c14; /* Near-black navy */
+  --color-dark-bg-secondary: #12172a; /* Soft dark blue */
+  --color-dark-bg-accent: #1b2436; /* Slightly brighter blue-gray */
+  --color-dark-text-primary: #e3e8f0; /* Soft slate (warmer white) */
+  --color-dark-text-accent: #60a5fa; /* Blue-400 */
+  --color-dark-text-highlight: #c084fc; /* Purple-400 */
+  --color-dark-button-primary-from: #2563eb; /* Blue-600 */
+  --color-dark-button-primary-to: #9333ea; /* Purple-600 */
+  --color-dark-button-secondary-bg: rgba(18, 23, 42, 0.8); /* Dark blue-black with better contrast */
+  --color-dark-border-primary: #1e293b; /* Slate-800 */
 }
 
-/* Apply the variables to utility classes */
+/* Light Theme */
 .light-theme {
   --color-bg-primary: var(--color-light-bg-primary);
   --color-bg-secondary: var(--color-light-bg-secondary);
@@ -40,6 +40,7 @@
   --color-border-primary: var(--color-light-border-primary);
 }
 
+/* Dark Theme */
 .dark-theme {
   --color-bg-primary: var(--color-dark-bg-primary);
   --color-bg-secondary: var(--color-dark-bg-secondary);
@@ -51,4 +52,8 @@
   --color-button-primary-to: var(--color-dark-button-primary-to);
   --color-button-secondary-bg: var(--color-dark-button-secondary-bg);
   --color-border-primary: var(--color-dark-border-primary);
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 50%, var(--color-bg-accent) 100%);
 }

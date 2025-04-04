@@ -9,16 +9,8 @@ export default function Home() {
   const { darkMode } = useTheme();
   
   return (
-    <div className={`relative flex min-h-screen flex-col items-center justify-center 
-      ${darkMode ? 'dark-theme' : 'light-theme'} transition-all duration-500`}
-      style={{
-        backgroundColor: 'var(--color-bg-primary)',
-        color: 'var(--color-text-primary)',
-        background: darkMode 
-          ? 'linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 50%, var(--color-bg-accent) 100%)'
-          : 'linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 50%, var(--color-bg-accent) 100%)'
-      }}
-    >
+<div className={`relative flex min-h-screen  ${darkMode ? 'dark-theme' : 'light-theme'}`}>
+
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-16 flex flex-col items-center">
