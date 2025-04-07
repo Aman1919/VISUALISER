@@ -5,13 +5,13 @@ import { FaCalculator } from "react-icons/fa";
 import { MathInputContainer } from "@/component/MathInputContanier";
 
 export default function MultiplicationLesson() {
-  const [num1, setNum1] = useState("12");
-  const [num2, setNum2] = useState("34");
-  const [result, setResult] = useState<number>(408);
+  const [num1, setNum1] = useState("2");
+  const [num2, setNum2] = useState("3");
+  const [result, setResult] = useState<number>(6);
   const [visualizationType, setVisualizationType] = useState("Grid");
 
   const handleMultiply = () => {
-    const number1 = parseInt(num1)||0;
+    const number1 = parseInt(num1) || 0;
     const number2 = parseInt(num2) || 0;
     setResult(number1 * number2);
   };
@@ -19,63 +19,72 @@ export default function MultiplicationLesson() {
   const RenderGridVisualization = () => {
     const number1 = parseInt(num1) || 0;
     const number2 = parseInt(num2) || 0;
-  
+    const total = number1 * number2;
+
     return (
-      <div className="flex flex-col items-center gap-6 p-6 rounded-lg shadow-md bg-bg-secondary">
-        <h3 className="text-xl font-semibold text-text-primary">
-          {number1} × {number2} = <span className="text-text-highlight">{number1 * number2}</span>
+      <div className="flex flex-col items-center gap-6 p-8 rounded-xl bg-bg-secondary border border-border-primary shadow-lg">
+        <h3 className="text-2xl font-bold text-text-primary">
+          {number1} × {number2} = <span className="text-text-highlight">{total}</span>
         </h3>
-        
+
         {/* Grid visualization */}
         <div className="relative">
-          {/* Column labels */}
-          <div className="flex mb-2 ml-12">
-            {[...Array(number2)].map((_, i) => (
-              <div key={`col-label-${i}`} className="w-10 text-center font-medium text-text-accent">
-                4
-              </div>
-            ))}
+          {/* Column indicator */}
+          <div className="flex items-center justify-center mb-3">
+            <div className="flex-1 h-1 bg-text-accent rounded-full"></div>
+            <span className="mx-3 text-lg font-medium text-text-accent bg-bg-primary px-3 py-1 rounded-md shadow-sm">
+              {number2} columns
+            </span>
+            <div className="flex-1 h-1 bg-text-accent rounded-full"></div>
           </div>
-          
-          {/* Grid with row labels */}
-          {[...Array(number1)].map((_, row) => (
-            <div key={`row-${row}`} className="flex items-center">
-              {/* Row label */}
-              <div className="w-10 mr-2 text-right font-medium text-text-accent">
-                {row + 1}
-              </div>
-              
-              {/* Grid cells */}
-              {[...Array(number2)].map((_, col) => (
-                <div 
-                  key={`cell-${row}-${col}`} 
-                  className={`
-                    w-10 h-10 border-2 
-                    ${row === 0 ? 'border-t-text-accent' : 'border-t-border-primary'} 
-                    ${col === 0 ? 'border-l-text-accent' : 'border-l-border-primary'} 
-                    border-r-border-primary border-b-border-primary
-                    flex items-center justify-center 
-                    bg-bg-primary hover:bg-bg-accent transition-colors
-                    relative
-                  `}
-                >
-                  {/* Show product in last cell */}
-                  {(row === number1 - 1 && col === number2 - 1) && (
-                    <span className="absolute -bottom-6 -right-2 text-lg font-bold text-text-highlight">
-                      {number1 * number2}
-                    </span>
-                  )}
+
+          <div className="flex gap-4">
+            {/* Row indicator */}
+            <div className="flex flex-col items-center justify-center">
+              <div className="flex-1 w-1 bg-text-accent rounded-full"></div>
+              <span className="my-3 text-lg font-medium text-text-accent bg-bg-primary px-3 py-1 rounded-md shadow-sm">
+                {number1} rows
+              </span>
+              <div className="flex-1 w-1 bg-text-accent rounded-full"></div>
+            </div>
+
+            {/* Grid cells */}
+            <div className="border-2 border-border-primary rounded-md overflow-hidden bg-bg-primary">
+              {[...Array(number1)].map((_, row) => (
+                <div key={`row-${row}`} className="flex">
+                  {[...Array(number2)].map((_, col) => (
+                    <div
+                      key={`cell-${row}-${col}`}
+                      className={`
+                        w-12 h-12
+                        flex items-center justify-center 
+                        hover:bg-bg-accent transition-colors duration-200
+                        relative
+                        ${row === 0 ? 'border-t-2 border-t-text-accent' : 'border-t border-t-border-primary'} 
+                        ${col === 0 ? 'border-l-2 border-l-text-accent' : 'border-l border-l-border-primary'} 
+                        border-r border-r-border-primary 
+                        border-b border-b-border-primary
+                      `}
+                    >
+                      {/* Show product in last cell */}
+                      {(row === number1 - 1 && col === number2 - 1) && (
+                        <span className="absolute -bottom-7 -right-2 text-lg font-bold text-text-highlight">
+                          {total}
+                        </span>
+                      )}
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
-          ))}
+          </div>
         </div>
-  
+
         {/* Explanation */}
-        <div className="text-text-primary text-center max-w-md">
-          <p>
-            This grid shows <span className="text-text-accent">{number1}</span> rows and <span className="text-text-accent">{number2}</span> columns. 
-            The total number of squares ({number1} × {number2}) equals <span className="text-text-highlight font-medium">{number1 * number2}</span>.
+        <div className="text-text-primary text-center max-w-md bg-bg-primary p-4 rounded-lg border border-border-primary shadow-sm">
+          <p className="text-sm">
+            The grid shows <span className="text-text-accent font-medium">{number1}</span> rows and <span className="text-text-accent font-medium">{number2}</span> columns.
+            The total number of squares ({number1} × {number2}) equals <span className="text-text-highlight font-bold">{total}</span>.
           </p>
         </div>
       </div>
@@ -86,10 +95,8 @@ export default function MultiplicationLesson() {
     switch (visualizationType) {
       case "Grid":
         return <RenderGridVisualization />;
-      case "array":
-        return (          
-            <p>{result}</p>
-        );
+      case "area":
+        return <p className="text-text-primary">{result}</p>;
       default:
         return null;
     }
@@ -97,11 +104,32 @@ export default function MultiplicationLesson() {
 
   return (
     <div className="max-w-4xl p-6 mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <FaCalculator /> Multiplication Visualiser
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <h1 className="text-3xl font-bold flex items-center gap-3 text-text-primary">
+          <FaCalculator className="text-text-accent" /> Multiplication Visualizer
         </h1>
-        <div className="w-10"></div> 
+        <div className="flex gap-3">
+          <button
+            onClick={() => setVisualizationType("area")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              visualizationType === "area"
+                ? "bg-gradient-to-r from-button-primary-from to-button-primary-to text-white shadow-md"
+                : "bg-button-secondary-bg text-text-primary opacity-90 hover:opacity-100"
+            }`}
+          >
+            Area Method
+          </button>
+          <button
+            onClick={() => setVisualizationType("Grid")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              visualizationType === "Grid"
+                ? "bg-gradient-to-r from-button-primary-from to-button-primary-to text-white shadow-md"
+                : "bg-button-secondary-bg text-text-primary opacity-90 hover:opacity-100"
+            }`}
+          >
+            Grid Method
+          </button>
+        </div>
       </div>
 
       <MathInputContainer
@@ -109,38 +137,17 @@ export default function MultiplicationLesson() {
         value2={num2}
         onValue1Change={setNum1}
         onValue2Change={setNum2}
-        operator="x"
+        operator="×"
         onCalculate={handleMultiply}
       />
 
-      <div className="mb-4 flex gap-2 flex-wrap">
-        <button
-          onClick={() => setVisualizationType("area")}
-          className={`px-3 py-1 rounded-md text-sm ${visualizationType === "area" ? 'opacity-100' : 'opacity-60'}`}
-          style={{
-            backgroundColor: visualizationType === "area" ? 'var(--color-button-primary-from)' : 'var(--color-bg-accent)',
-            color: visualizationType === "area" ? 'white' : 'var(--color-text-primary)'
-          }}
-        >
-          Area
-        </button>
-        <button
-          onClick={() => setVisualizationType("Grid")}
-          className={`px-3 py-1 rounded-md text-sm ${visualizationType === "Grid" ? 'opacity-100' : 'opacity-60'}`}
-          style={{
-            backgroundColor: visualizationType === "Grid" ? 'var(--color-button-primary-from)' : 'var(--color-bg-accent)',
-            color: visualizationType === "Grid" ? 'white' : 'var(--color-text-primary)'
-          }}
-        >
-          Grid Method
-        </button>
-      </div>
-
-      <div className=" flex items-center justify-center">
+      <div className="mt-8 flex items-center justify-center min-h-[400px]">
         {result !== 0 ? (
-          RenderVisualization()
+          <RenderVisualization />
         ) : (
-          <p className="text-center opacity-60">Enter numbers and click {"Calculate"}</p>
+          <div className="text-center text-text-primary opacity-60 p-8 bg-bg-secondary rounded-xl border border-dashed border-border-primary">
+            <p>Enter numbers and click "Calculate"</p>
+          </div>
         )}
       </div>
     </div>
